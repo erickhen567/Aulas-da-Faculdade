@@ -4,17 +4,49 @@
 
 int main () {
     int aleatorio;
+    int pontos = 0;
+    int sel;
 
     srand(time(NULL));
 
-    aleatorio = rand();
+    for (pontos = 10; (pontos > 0) && (sel != 0); ) {
+
+    aleatorio = rand()%11;
 
     printf("\n o numero sorteado e: %d", aleatorio);
 
-    if ((aleatorio < 10000) ||  (aleatorio > 20000)) {
-        printf("\n Voce e sortudo");
-    } else {
-       printf("\n Voce se fudeu");
+    if (aleatorio == 0) 
+    {
+        printf("\n Game Over");
+        pontos = 0;
+    }  
+    else if (aleatorio < 2) 
+    {
+        printf("\n Voce perdeu 10 pontos");
+        pontos = pontos - 10;
+    }  
+    else if (aleatorio < 4)
+    {
+        printf("\n Voce perdeu 1 ponto");
+        pontos = pontos - 1;
+    }  
+    else if (aleatorio < 8) 
+    {
+        printf("\n Voce nao perdeu nem ganhou nada");    
+    } 
+    else if (aleatorio < 10) 
+    {
+        printf("\n Voce ganhou 10 pontos");
+        pontos = pontos + 10;
+    }
+    else 
+    {
+       printf("\n Voce ganhou 100 pontos");
+       pontos = pontos + 100;
+    }
+        printf("\n Voce tem %d pontos", pontos);
+        printf("\n Insira 0 para sair e qualquer outra coisa para continuar: ");
+        scanf("%d", &sel);
     }
 
     return 0;
