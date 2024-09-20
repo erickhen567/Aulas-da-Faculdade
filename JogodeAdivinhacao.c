@@ -21,11 +21,11 @@ int main () {
     {
         printf("Voce acertou!!!");
     }
-    if else
+    if () else (aleatorio)
     {
        printf("O numero eh >");
     
-    if else
+    if () else
     {
        printf("O numero eh <")
     }
