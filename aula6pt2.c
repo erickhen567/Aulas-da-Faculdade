@@ -1,62 +1,35 @@
-#include <stdio.h> // standard input output 
-
-#include <stdlib.h> // standard library 
-
-#include <time.h> // time 
+#include <stdio.h>
 
 
-int main () {
-    int aleatorio;
-    int pontos;
-    int sel = 1;
+#define QUANTIDADE_DE_NOTAS (3)
 
+int main()
+{
+    int notas[QUANTIDADE_DE_NOTAS];
+    float pesos[QUANTIDADE_DE_NOTAS];
 
-    pontos = 10;
-    
+    float soma;
+    int i;
 
-    srand(time(NULL));
-
-    pontos = 10;
-    do 
+    for (i = 0; i < QUANTIDADE_DE_NOTAS; i++)
     {
-        aleatorio = rand()%11;
+        printf("\n Insira a nota %d", i + 1);
+        scanf("%f", &notas[i]);
 
-        printf("\n O numero sorteado e: %d", aleatorio);
+        printf("\n Insira a peso %d", i + 1);
+        scanf("%f", &pesos[i]);
+    }
 
-        if (aleatorio == 0) 
-        {
-            printf("\n Game Over");
-            pontos = 0;
-        } 
-        else if (aleatorio < 2) 
-        {
-        printf("\n Voce perdeu 10 pontos");
-        pontos = pontos - 10;
-        }
-        else if (aleatorio < 4) 
-        {
-            printf("\n Voce perdeu 1 ponto");
-            pontos = pontos - 1;
-        }
-        else if (aleatorio < 8)
-        {
-            printf("\n Voce nao perdeu nem ganhou nada");
-        }
-        else if (aleatorio < 10)
-        {
-            printf("\n Voce ganhou 10 pontos");
-            pontos = pontos + 10;
-        }
-        else
-        {
-            printf("\n Voce ganhou 100 pontos");
-            pontos = pontos + 100;
-        }
+    soma = 0.0;
 
-        printf("\n Voce tem %d pontos", pontos);
-        printf("\n Insira 0 para sair, qualquer outra coisa para continuar: ");
-        scanf("%d", &sel);
-    } while ((pontos > 0) && (sel != 0));
+    for (i = 0; i < QUANTIDADE_DE_NOTAS; i++)
+    {
+        soma += notas [i]*pesos[i];
 
+    }
+
+    printf("\n A soma ponderada eh %f", soma);
+    printf("\n a media ponderada eh %f", soma/QUANTIDADE_DE_NOTAS);
+    
     return 0;
 }
