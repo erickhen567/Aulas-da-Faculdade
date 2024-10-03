@@ -1,54 +1,52 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+#include <string.h>
 
+#define QUANTIDADE_DE_CADASTROS (15)
 
-int main () {
-    int aleatorio;
-    int pontos;
-    int sel = 1;
+int main()
+{
+    int idade[QUANTIDADE_DE_CADASTROS] = {0};
+    char nome[QUANTIDADE_DE_CADASTROS][100];
+    float altura[QUANTIDADE_DE_CADASTROS] = {0};
+    double massa[QUANTIDADE_DE_CADASTROS] = {0};
 
-    srand(time(NULL));
+    int id;
 
-    pontos = 10;
-    while ((pontos > 0) && (sel != 0)) {
-        aleatorio = rand()%11;
+    for (id = 0; id < QUANTIDADE_DE_CADASTROS; id++)
+    {
+        strcpy(nome[id], "nao inicializado");
+    }
 
-        printf("\n O numero sorteado e: %d", aleatorio);
+    while (1)
+    {
+       do
+ {
+            printf("\n Escolha usuario [0 - %d]: ", QUANTIDADE_DE_CADASTROS-1);
+            scanf("%d", &id);
+            printf("\n voce escolheu %d", id);
+        } while ( (id < 0) || (id > QUANTIDADE_DE_CADASTROS) );
 
-        if (aleatorio == 0) 
+        printf("\n Insira as informacoes do usuario 0");
+        printf("\n Nome: ");
+        scanf("%s", nome[id]);
+
+        printf("\n Idade: ");
+        scanf("%d", &idade[id]);
+
+        printf("\n Altura: ");
+        scanf("%f", &altura[id]);
+
+        printf("\n Massa corporal: ");
+        scanf("%lf", &massa[id]);
+
+        for (id = 0; id < QUANTIDADE_DE_CADASTROS; id++)
         {
-            printf("\n Game Over");
-            pontos = 0;
-        } 
-        else if (aleatorio < 2) 
-        {
-        printf("\n Voce perdeu 10 pontos");
-        pontos = pontos - 10;
+            printf("\n Usuario %d:", id);
+            printf("\n   Nome: %s", nome[id]);
+            printf("\n   Idade: %d", idade[id]);
+            printf("\n   Altura: %f", altura[id]);
+            printf("\n   Massa corporal: %lf", massa[id]);
         }
-        else if (aleatorio < 4) 
-        {
-            printf("\n Voce perdeu 1 ponto");
-            pontos = pontos - 1;
-        }
-        else if (aleatorio < 8)
-        {
-            printf("\n Voce nao perdeu nem ganhou nada");
-        }
-        else if (aleatorio < 10)
-        {
-            printf("\n Voce ganhou 10 pontos");
-            pontos = pontos + 10;
-        }
-        else
-        {
-            printf("\n Voce ganhou 100 pontos");
-            pontos = pontos + 100;
-        }
-
-        printf("\n Voce tem %d pontos", pontos);
-        printf("\n Insira 0 para sair, qualquer outra coisa para continuar: ");
-        scanf("%d", &sel);
     }
 
     return 0;
