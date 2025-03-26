@@ -19,4 +19,6 @@ create table Livros(
     ano_publicacao year
     id_autor int,
     id_categoria int
+    constraint fk_livro_autor foreign key (id_autor) references Autores(id_autor),
+    constraint fk_livro_categoria foreign key (id_categoria) references Categorias(id_categoria)
 );
