@@ -1,0 +1,288 @@
+Lista de Exercícios – DML, DQL, INNER JOIN
+
+Baseando-se no Banco de Dados utilizado durante as aulas db_venda_veiculo,
+implemente as seguintes seções:
+
+Seção 1 – Consultas Simples (SELECT)
+
+1. Liste todos os dados da tabela Cliente.
+SELECT * FROM Cliente;
+
+2. Liste todos os dados da tabela Funcionario.
+SELECT * FROM Funcionario;
+
+3. Liste todos os veículos cadastrados.
+SELECT * FROM Veiculo;
+
+4. Liste todas as vendas realizadas até o momento.
+SELECT * FROM Venda;
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Seção 2 – Filtros e Condições
+5. Liste os veículos com ano de fabricação posterior a 2020.
+SELECT modelo, ano_fabricacao FROM Veiculo WHERE ano > 2020;
+
+6. Liste os clientes com nome iniciando com a letra “C”.
+SELECT * FROM Cliente WHERE nome LIKE "C%";
+
+7. Liste os funcionários cujo nome contenha a palavra “Silva”.
+SELECT * FROM Funcionario WHERE nome LIKE '%Silva%';
+
+8. Liste todas as vendas realizadas após o dia 2024-03-01.
+SELECT * FROM Venda WHERE data_venda > '2024-03-01';
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Seção 3 – JOINs (Relacionamentos entre Tabelas)
+9. Exiba uma lista de veículos vendidos com: marca, modelo, ano de fabricação,
+placa, valor da venda, data da venda, nome do cliente e nome do funcionário.
+SELECT 
+    Veiculo.marca, Veiculo.modelo, Veiculo.ano_fabricacao, Veiculo.placa,
+    Venda.valor_venda, Venda.data_venda,
+    Cliente.nome AS nome_cliente,
+    Funcionario.nome AS nome_funcionario
+FROM Veiculo
+INNER JOIN Venda ON Veiculo.id_veiculo = Venda.id_veiculo
+INNER JOIN Cliente ON Venda.id_cliente = Cliente.id_cliente
+INNER JOIN Funcionario ON Venda.id_funcionario = Funcionario.id_funcionario;
+
+10. Liste todas as vendas com nome do cliente e do funcionário responsável pela
+venda.
+SELECT 
+    Venda.id_venda,
+    Venda.valor_venda,
+    Venda.data_venda,
+    Cliente.nome AS nome_cliente,
+    Funcionario.nome AS nome_funcionario
+FROM Venda
+JOIN Cliente ON Venda.id_cliente = Cliente.id_cliente
+JOIN Funcionario ON Venda.id_funcionario = Funcionario.id_funcionario;
+
+11. Liste os nomes dos clientes e os modelos dos veículos que compraram.
+SELECT 
+    Cliente.nome AS nome_cliente,
+    Veiculo.modelo AS modelo_veiculo
+FROM Venda
+JOIN Cliente ON Venda.id_cliente = Cliente.id_cliente
+JOIN Veiculo ON Venda.id_veiculo = Veiculo.id_veiculo;
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Seção 4 – Agregações (Funções de Grupo)
+12. Calcule o valor médio de todas as vendas.
+CREATE VIEW media_vendas AS
+SELECT
+    ROUND(AVG(valor_venda), 2) AS media_valor_venda,
+    COUNT(*) AS total_vendas
+FROM Venda;
+
+SELECT * FROM media_vendas;
+
+13. Mostre o total de vendas realizadas por cada funcionário (apenas IDs).
+CREATE VIEW media_vendas_por_funcionario AS
+SELECT
+    id_funcionario,
+    ROUND(AVG(valor_venda), 2) AS media_valor_venda,
+    COUNT(*) AS total_vendas
+FROM Venda
+GROUP BY id_funcionario;
+
+SELECT * FROM media_vendas_por_funcionario;
+
+14. Mostre o maior e o menor valor de venda registrado.
+SELECT 
+    MAX(valor_venda) AS maior_valor_venda,
+    MIN(valor_venda) AS menor_valor_venda
+FROM Venda;
+
+15. Mostre quantos veículos foram vendidos por ano de fabricação.
+SELECT 
+    Veiculo.ano_fabricacao,
+    COUNT(*) AS quantidade_vendida
+FROM Venda
+JOIN Veiculo ON Venda.id_veiculo = Veiculo.id_veiculo
+GROUP BY Veiculo.ano_fabricacao
+ORDER BY Veiculo.ano_fabricacao;
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Seção 5 – Views (Visões)
+16. Crie uma view chamada media_vendas que exibe a média dos valores de venda
+e o total de vendas.
+CREATE VIEW media_vendas AS
+SELECT 
+    AVG(valor_venda) AS media_valor_venda,
+    COUNT(*) AS total_vendas
+FROM Venda;
+Para consulta: SELECT * FROM media_vendas;
+
+17. Crie uma view chamada media_vendas_por_funcionario que exiba o id do
+funcionário, média de valores vendidos e total de vendas.
+CREATE VIEW media_vendas_por_funcionario AS
+SELECT 
+    id_funcionario,
+    AVG(valor_venda) AS media_valor_venda,
+    COUNT(*) AS total_vendas
+FROM Venda
+GROUP BY id_funcionario;
+Para consulta: SELECT * FROM media_vendas_por_funcionario;
+
+18. Crie uma view media_vendas_por_funcionarios que exiba o nome do
+funcionário, a média de valores vendidos e total de vendas.
+CREATE VIEW media_vendas_por_funcionarios AS
+SELECT 
+    Funcionario.nome AS nome_funcionario,
+    AVG(Venda.valor_venda) AS media_valor_venda,
+    COUNT(*) AS total_vendas
+FROM Venda
+JOIN Funcionario ON Venda.id_funcionario = Funcionario.id_funcionario
+GROUP BY Funcionario.nome;
+Para consulta: SELECT * FROM media_vendas_por_funcionarios;
+
+19. Crie uma view ordenada (media_vendas_por_funcionarios_ordenada) do
+exercício anterior, do maior para o menor valor médio de vendas.
+CREATE VIEW media_vendas_por_funcionarios_ordenada AS
+SELECT 
+    Funcionario.nome AS nome_funcionario,
+    AVG(Venda.valor_venda) AS media_valor_venda,
+    COUNT(*) AS total_vendas
+FROM Venda
+JOIN Funcionario ON Venda.id_funcionario = Funcionario.id_funcionario
+GROUP BY Funcionario.nome
+ORDER BY media_valor_venda DESC;
+Para consulta: SELECT * FROM media_vendas_por_funcionarios_ordenada;
+
+20. Crie uma view media_vendas_por_funcionarios_por_periodo que mostre essas
+médias e totais, considerando apenas vendas a partir de 2024-01-01.
+CREATE VIEW media_vendas_por_funcionarios_por_periodo AS
+SELECT 
+    Funcionario.nome AS nome_funcionario,
+    AVG(Venda.valor_venda) AS media_valor_venda,
+    COUNT(*) AS total_vendas
+FROM Venda
+JOIN Funcionario ON Venda.id_funcionario = Funcionario.id_funcionario
+WHERE Venda.data_venda >= '2024-01-01'
+GROUP BY Funcionario.nome;
+Para consulta: SELECT * FROM media_vendas_por_funcionarios_por_periodo;
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Seção 6 – Procedures (Procedimentos Armazenados)
+21. Crie uma procedure chamada inserir_clientes para cadastrar 50 clientes
+automaticamente, com dados fictícios.
+delimiter $$
+
+create procedure inserir_clientes()
+BEGIN
+	declare i INT default 1;
+    while i <= 50 do
+		INSERT INTO Cliente (nome, cnh, tipo_cliente, cartao_pagamento)
+        VALUES (
+				concat('Cliente', i),
+                concat('CNH', lpad(i, 10, '0')),
+                if (i % 2 = 0, 'Física', 'Jurídica'),
+                lpad(floor(rand() * 100000000000000000), 16, '0')
+			);
+            SET i = i + 1;
+	end while;
+end $$
+
+delimiter ;
+call inserir_clientes();
+
+Para consulta: SELECT * FROM Cliente;
+
+22. Altere a procedure inserir_clientes para alternar entre clientes do tipo “Física” e
+“Jurídica”.
+DELIMITER $$
+
+CREATE OR REPLACE PROCEDURE inserir_clientes()
+BEGIN
+    DECLARE i INT DEFAULT 1;
+
+    WHILE i <= 50 DO
+        INSERT INTO Cliente (nome, cnh, tipo_cliente, cartao_pagamento)
+        VALUES (
+            CONCAT('Cliente', i),
+            CONCAT('CNH', LPAD(i, 10, '0')),
+            IF(MOD(i, 2) = 0, 'Física', 'Jurídica'),  -- Alternância entre tipos
+            LPAD(FLOOR(RAND() * 10000000000000000), 16, '0')  -- Cartão aleatório com 16 dígitos
+        );
+        SET i = i + 1;
+    END WHILE;
+END $$
+
+DELIMITER ;
+
+Para consulta:
+CALL inserir_clientes();
+
+SELECT tipo_cliente, COUNT(*) 
+FROM Cliente 
+GROUP BY tipo_cliente;
+
+23. Crie uma procedure chamada inserir_vendas que cadastre 10 vendas aleatórias
+utilizando IDs de veículos e clientes já cadastrados.
+DELIMITER $$
+
+CREATE PROCEDURE inserir_vendas()
+BEGIN
+    DECLARE i INT DEFAULT 1;
+    DECLARE v_id INT;
+    DECLARE c_id INT;
+    DECLARE f_id INT;
+    DECLARE v_valor DECIMAL(10,2);
+    
+    WHILE i <= 10 DO
+        -- Seleciona um veículo disponível (ainda não vendido)
+        SELECT id_veiculo, valor INTO v_id, v_valor
+        FROM Veiculo 
+        WHERE status = 'Disponível'
+        ORDER BY RAND()
+        LIMIT 1;
+
+        -- Seleciona um cliente aleatório
+        SELECT id_cliente INTO c_id
+        FROM Cliente
+        ORDER BY RAND()
+        LIMIT 1;
+
+        -- Seleciona um funcionário aleatório
+        SELECT id_funcionario INTO f_id
+        FROM Funcionario
+        ORDER BY RAND()
+        LIMIT 1;
+
+        -- Insere a venda
+        INSERT INTO Venda (valor_venda, data_venda, id_veiculo, id_cliente, id_funcionario)
+        VALUES (
+            v_valor,
+            DATE_ADD('2024-01-01', INTERVAL FLOOR(RAND() * 90) DAY), -- Data aleatória entre Jan e Mar
+            v_id,
+            c_id,
+            f_id
+        );
+
+        -- Atualiza status do veículo
+        UPDATE Veiculo SET status = 'Vendido' WHERE id_veiculo = v_id;
+
+        SET i = i + 1;
+    END WHILE;
+END $$
+
+DELIMITER ;
+
+Para consulta:
+CALL inserir_vendas();
+SELECT * FROM Venda;
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Seção 7 – Desafios (Combinação de Conceitos)
+24. Crie uma consulta que mostre o nome do cliente, o nome do funcionário, o
+modelo do veículo e o valor da venda apenas para vendas realizadas no mês
+atual.
+
+
+25. Crie uma view que exiba o ranking dos funcionários com base no número total
+de vendas realizadas, do maior para o menor.
+
+
+26. Escreva uma consulta que mostre quantos clientes do tipo "Jurídica"
+compraram veículos após 2024-01-01.
+
