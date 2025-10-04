@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descubra seu Personagem</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="intro">
+        <h1>Bem-vindo ao Jogo dos Personagens!</h1>
+        <p>Descubra qual personagem você seria no universo de Naruto com base em suas respostas.</p>
+        <button id="startButton">Começar o Questionário</button>
+    </div>
+
+    <div id="quiz" style="display: none;">
+        <h2>Responda as perguntas abaixo:</h2>
+        <form id="quizForm">
+            
+        </form>
+        <button id="submitQuiz" style="display: none;">Ver Resultado</button>
+    </div>
+
+    <div id="result" style="display: none;">
+        <h2>Resultado:</h2>
+        <p id="characterName"></p>
+        <p id="characterDesc"></p>
+        <img id="characterImage" alt="Imagem do personagem" />
+        <p>Pontuação: <span id="score"></span></p>
+        <button id="restartButton">Reiniciar Jogo</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
